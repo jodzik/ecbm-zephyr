@@ -1,0 +1,47 @@
+menu "ECB master Zephyr adaptation"
+
+config ECBM_ZEPHYR
+    bool "ECB master zephyr transport library"
+    default y
+    depends on UART_ASYNC_API
+
+config ECBM_MAX_PAYLOAD_SIZE
+    int "ECB max payload size, bytes"
+    range 1 4096
+    default 244
+    help
+        Maximum ECB packet payload transferred in one transaction. Defines the core
+        library buffers, three buffers of ~9/8 of (this value + 10) bytes are
+        allocated per instance.
+
+config ECBM_ZEPHYR_THREAD_STACK_SIZE
+    int "ECB master RX owner thread stack size"
+    range 512 32768
+    default 2048
+
+config ECBM_ZEPHYR_THREAD_PRIORITY
+    int "ECB master RX owner thread priority"
+    default 5
+
+config ECBM_ZEPHYR_RX_RING_BUF_SIZE
+    int "ECB master RX ring buffer size, bytes, must be a power of two"
+    range 64 8192
+    default 1024
+    help
+        Buffer between the UART RX events(ISR context) and the owner thread,
+        must hold the incoming bytes for the worst owner thread scheduling delay.
+
+config ECBM_ZEPHYR_RX_CHUNK_SIZE
+    int "ECB master UART RX double buffer chunk size, bytes"
+    range 16 1024
+    default 64
+
+config ECBM_ZEPHYR_TX_TIMEOUT_MS
+    int "ECB master UART TX completion timeout, ms"
+    range 100 600000
+    default 5000
+    help
+        Aborts the UART TX DMA if the frame is not shifted out within this time,
+        take the bus baudrate and the max payload size into account.
+
+endmenu
