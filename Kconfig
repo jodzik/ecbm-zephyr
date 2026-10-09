@@ -5,6 +5,10 @@ config ECBM_ZEPHYR
     default y
     depends on UART_ASYNC_API
 
+module = ECBM
+module-str = ecbm
+source "subsys/logging/Kconfig.template.log_config"
+
 config ECBM_MAX_PAYLOAD_SIZE
     int "ECB max payload size, bytes"
     range 1 4096
